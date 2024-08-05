@@ -1,29 +1,35 @@
 from flask import Flask, request, jsonify
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+import views
 
 
+login_manager = LoginManager()
+db = SQLAlchemy()
+migrate = Migrate()
 
-def make_app():
     
-    db = SQLAlchemy()
+app = Flask(__name__)
 
-    app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+app.config["SECRET_KEY"] = 'thisissecretkey'
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 
-    db.init_app(app)
+db.init_app(app)
+migrate.init_app(app, db)
+login_manager.login_view = 'auth.login'
 
-    login_manager = LoginManager()
+login_manager.init_app(app)
 
-    login_manager.login_view = 'auth.login'
+@app.route('/', methods=['GET'])
+def hello():
+    return "app is running"
 
-    login_manager.init_app(app)
-
-    @app.route('/', methods=['GET'])
-    def hello():
-        return "app is running"
+app.register_blueprint(views.admin_routes, url_prefix='/admin')
     
-    return app
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 
