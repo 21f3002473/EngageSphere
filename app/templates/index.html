@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<div class="home_page">
+    <div>
+        <h1>Welcome to EngageSphere</h1>
+        <p>One of the best influencer marketing platforms in the world.
+             We help you connect with the right influencers to promote your brand and reach your target audience.</p>
+    </div>
+    <div>
+        <img src="{{ url_for('static', filename='images/home_page.png') }}" alt="Home page image">
+    </div>
+</div>
+
+{% endblock %}

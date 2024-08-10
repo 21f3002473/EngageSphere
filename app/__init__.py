@@ -1,8 +1,7 @@
 from flask import Flask, request, jsonify
-from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-
+from flask import  render_template, redirect, url_for
 from app.views import AllViews
 
 from .routes.admin_routes import admin_routes
@@ -14,20 +13,20 @@ class EngageSphere:
         self.app.config["SECRET_KEY"] = 'thisissecretkey'
         self.db = SQLAlchemy(self.app)
         self.migrate = Migrate(self.app, self.db)
-        self.login_manager = LoginManager(self.app)
-        self.login_manager.login_view = 'auth.login'
-        self.login_manager.login_message_category = 'info'
 
         self.views = AllViews(self.app)
         self.register_routes()
 
     def register_routes(self):
-        self.app.route('/', methods=['GET'])(self.hello)
+        self.app.route('/', methods=['GET'])(self.load_homepage)
         self.app.route('/login', methods=['GET'])(self.login)
 
 
-    def hello(self):
-        return "app is running"
+    def load_homepage(self):
+        return render_template('index.html')
+        # return "Homepage is working fine"
+    
+
     def login(self):
         return "login route is working fine"
 
